@@ -11,7 +11,10 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import br.senac.sp.projetopoo.dao.ConnectionFactory;
+import br.senac.sp.projetopoo.dao.EMFactory;
+import br.senac.sp.projetopoo.dao.InterfaceDao;
 import br.senac.sp.projetopoo.dao.MarcaDAO;
+import br.senac.sp.projetopoo.dao.MarcaDaoHib;
 import br.senac.sp.projetopoo.modelo.Marca;
 import br.senac.sp.projetopoo.tablemodel.MarcaTableModel;
 
@@ -51,7 +54,7 @@ public class FrameMarca extends JFrame {
 	private JTextField tfId;
 	private JTextField tfNome;
 	private Marca marca;
-	private MarcaDAO dao;
+	private InterfaceDao<Marca> dao; //trocamos MarcaDAO pra isso
 	private JFileChooser chooser;
 	private FileFilter imageFilter;
 	private File selecionado;
@@ -80,11 +83,12 @@ public class FrameMarca extends JFrame {
 	 * Create the frame.
 	 */
 	public FrameMarca() {
-		dao = new MarcaDAO(ConnectionFactory.getConexao());
+		
+		dao = new MarcaDaoHib(EMFactory.getEntityManager());
 		
 		try {
 			marcas = dao.listar();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			JOptionPane.showMessageDialog(FrameMarca.this,"Erro: " + e.getMessage(), "Erro",JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
@@ -181,7 +185,7 @@ public class FrameMarca extends JFrame {
 						tableModel.fireTableDataChanged();
 						limpar();
 						
-					} catch (SQLException | IOException e1) {
+					} catch (Exception e1) {
 						JOptionPane.showMessageDialog(FrameMarca.this, e1.getMessage(), "Erro",
 								JOptionPane.ERROR_MESSAGE);
 						e1.printStackTrace();
@@ -205,7 +209,7 @@ public class FrameMarca extends JFrame {
 							tableModel.setLista(marcas);
 							tableModel.fireTableDataChanged();
 							limpar();
-						} catch (SQLException e1) {
+						} catch (Exception e1) {
 							
 							e1.printStackTrace();
 						}

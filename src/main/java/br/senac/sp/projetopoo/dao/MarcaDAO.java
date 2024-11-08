@@ -10,7 +10,7 @@ import java.util.List;
 
 import br.senac.sp.projetopoo.modelo.Marca;
 
-public class MarcaDAO {
+public class MarcaDAO implements InterfaceDao<Marca> {
 	private Connection conexao;
 	private String sql; 
 	private PreparedStatement stmt;
@@ -68,5 +68,11 @@ public class MarcaDAO {
 		stmt.close();
 		
 	}
+	@Override
+	public Marca buscar(int id) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	}
 
