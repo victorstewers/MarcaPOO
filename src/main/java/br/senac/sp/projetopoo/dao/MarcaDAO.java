@@ -14,6 +14,7 @@ public class MarcaDAO implements InterfaceDao<Marca> {
 	private Connection conexao;
 	private String sql; 
 	private PreparedStatement stmt;
+	private int qntidadeMarcas = 0;
 	
 	public MarcaDAO(Connection conexao) {
 		this.conexao = conexao;
@@ -35,6 +36,7 @@ public class MarcaDAO implements InterfaceDao<Marca> {
 			stmt = conexao.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
+				qntidadeMarcas++;
 				Marca m = new Marca();
 				m.setId(rs.getInt("id"));
 				m.setNome(rs.getString("nome"));
@@ -68,6 +70,26 @@ public class MarcaDAO implements InterfaceDao<Marca> {
 		stmt.close();
 		
 	}
+	
+	public String[] vetorMarcas() throws SQLException{
+		listar();
+		String[] vetorNomeMarcas = new String[qntidadeMarcas];
+		sql = "select nome from marca ";
+		stmt = conexao.prepareStatement(sql);
+		ResultSet rs = stmt.executeQuery();
+		int contadorVetor = 0;
+		while(rs.next()) {
+			vetorNomeMarcas[contadorVetor] = rs.getString("nome");
+			contadorVetor++;
+			
+			
+		}
+		rs.close();
+		stmt.close();
+		return vetorNomeMarcas;
+	}
+	
+	
 	@Override
 	public Marca buscar(int id) throws SQLException {
 		// TODO Auto-generated method stub

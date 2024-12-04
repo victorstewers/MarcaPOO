@@ -5,17 +5,24 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import br.senac.sp.projetopoo.dao.ConnectionFactory;
+import br.senac.sp.projetopoo.dao.MarcaDAO;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.ScrollPane;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+import javax.swing.DefaultComboBoxModel;
 
 public class FrameCelular extends JFrame {
 
@@ -24,6 +31,9 @@ public class FrameCelular extends JFrame {
 	private JTextField tfId;
 	private JTextField tfModelo;
 	private JTable table;
+	private JTextField txtBuscar;
+	private MarcaDAO marcaDao;
+	private ConnectionFactory conn;
 
 	/**
 	 * Launch the application.
@@ -43,10 +53,11 @@ public class FrameCelular extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws SQLException 
 	 */
-	public FrameCelular() {
+	public FrameCelular() throws SQLException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 685, 475);
+		setBounds(100, 100, 685, 587);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -82,6 +93,9 @@ public class FrameCelular extends JFrame {
 		contentPane.add(lblMarca);
 		
 		JComboBox cbMarca = new JComboBox();
+		marcaDao = new MarcaDAO(conn.getConexao());
+		String vetor[] = marcaDao.vetorMarcas();
+		cbMarca.setModel(new DefaultComboBoxModel(vetor));
 		cbMarca.setBounds(88, 96, 186, 22);
 		contentPane.add(cbMarca);
 		
@@ -91,6 +105,7 @@ public class FrameCelular extends JFrame {
 		contentPane.add(lblSistemaOperacional);
 		
 		JComboBox cbSistemaOperacional = new JComboBox();
+		cbSistemaOperacional.setModel(new DefaultComboBoxModel(new String[] {"iOS", "Android"}));
 		cbSistemaOperacional.setBounds(168, 129, 186, 22);
 		contentPane.add(cbSistemaOperacional);
 		
@@ -99,7 +114,7 @@ public class FrameCelular extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnSalvar.setBounds(71, 192, 119, 36);
+		btnSalvar.setBounds(39, 304, 119, 36);
 		contentPane.add(btnSalvar);
 		
 		JButton btnAlterar = new JButton("Alterar");
@@ -107,7 +122,7 @@ public class FrameCelular extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnAlterar.setBounds(201, 192, 119, 36);
+		btnAlterar.setBounds(168, 304, 119, 36);
 		contentPane.add(btnAlterar);
 		
 		JButton btnExcluir = new JButton("Excluir");
@@ -115,7 +130,7 @@ public class FrameCelular extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnExcluir.setBounds(330, 192, 119, 36);
+		btnExcluir.setBounds(297, 304, 119, 36);
 		contentPane.add(btnExcluir);
 		
 		JButton btnVoltar = new JButton("Voltar");
@@ -123,7 +138,7 @@ public class FrameCelular extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnVoltar.setBounds(459, 192, 119, 36);
+		btnVoltar.setBounds(426, 304, 119, 36);
 		contentPane.add(btnVoltar);
 		
 		JLabel lbLogo = new JLabel("");
@@ -133,10 +148,34 @@ public class FrameCelular extends JFrame {
 		contentPane.add(lbLogo);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(55, 239, 542, 186);
+		scrollPane.setBounds(35, 351, 542, 186);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
+		
+		JLabel lblBuscar = new JLabel("Buscar:");
+		lblBuscar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblBuscar.setBounds(25, 172, 133, 14);
+		contentPane.add(lblBuscar);
+		
+		txtBuscar = new JTextField();
+		txtBuscar.setColumns(10);
+		txtBuscar.setBounds(88, 171, 186, 20);
+		contentPane.add(txtBuscar);
+		
+		JComboBox cbFiltro = new JComboBox();
+		cbFiltro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 if (cbFiltro.getSelectedIndex() == 0) {
+		                JOptionPane.showMessageDialog(FrameCelular.this, "Por favor, escolha uma opção válida.");
+		                cbFiltro.setSelectedIndex(-1); // Restaura sem seleção
+		            }
+			}
+		});
+		cbFiltro.setModel(new DefaultComboBoxModel(new String[] {"Filtro", "Celular", "Marca"}));
+		cbFiltro.setToolTipText("");
+		cbFiltro.setBounds(297, 170, 107, 22);
+		contentPane.add(cbFiltro);
 	}
 }

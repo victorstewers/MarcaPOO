@@ -68,6 +68,7 @@ public class FrameMarca extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
+				
 				try {
 					FrameMarca frame = new FrameMarca();
 					frame.setVisible(true);
@@ -96,10 +97,12 @@ public class FrameMarca extends JFrame {
 
 		chooser = new JFileChooser();
 		imageFilter = new FileNameExtensionFilter("Imagens", ImageIO.getReaderFileSuffixes());
-
+		
 		setTitle("Cadastro de Marcas");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 520, 712);
+        setLocationRelativeTo(null);
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
