@@ -17,7 +17,7 @@ public class MarcaDaoHib implements InterfaceDao<Marca> {
 	public void inserir(Marca objeto) throws Exception {
 		this.manager.persist(objeto); //Isto faz o INSERT INTO(etc) sem fazer aquelas estruturas do Insert Into do JDBC padrao, quando um objeto já possui um ID ele altera ao inves de inserir
 		//HyperNate é uma implementação
-		this.manager.persist(objeto);
+		
 		this.manager.getTransaction().begin();
 		this.manager.getTransaction().commit();
 	}

@@ -61,6 +61,7 @@ public class FrameMarca extends JFrame {
 	private JTable tbMarca;
 	private List<Marca> marcas;
 	private MarcaTableModel tableModel;
+	private JLabel lbLogo;
 
 	/**
 	 * Launch the aasdasdpplication.
@@ -100,7 +101,7 @@ public class FrameMarca extends JFrame {
 		
 		setTitle("Cadastro de Marcas");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 520, 712);
+		setBounds(100, 100, 520, 682);
         setLocationRelativeTo(null);
 
 		contentPane = new JPanel();
@@ -130,7 +131,7 @@ public class FrameMarca extends JFrame {
 		tfNome.setBounds(58, 59, 214, 20);
 		contentPane.add(tfNome);
 
-		JLabel lbLogo = new JLabel("");
+		lbLogo = new JLabel("");
 		lbLogo.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -198,7 +199,7 @@ public class FrameMarca extends JFrame {
 			}
 		});
 		btnSalvar.setMnemonic('s');
-		btnSalvar.setBounds(15, 177, 89, 36);
+		btnSalvar.setBounds(10, 149, 89, 36);
 		contentPane.add(btnSalvar);
 
 		JButton btnExcluir = new JButton("Excluir");
@@ -225,7 +226,7 @@ public class FrameMarca extends JFrame {
 			}
 		});
 		btnExcluir.setMnemonic('e');
-		btnExcluir.setBounds(120, 177, 89, 36);
+		btnExcluir.setBounds(115, 149, 89, 36);
 		contentPane.add(btnExcluir);
 
 		JButton btnLimpar = new JButton("Limpar");
@@ -235,11 +236,11 @@ public class FrameMarca extends JFrame {
 			}
 		});
 		btnLimpar.setMnemonic('l');
-		btnLimpar.setBounds(219, 177, 89, 36);
+		btnLimpar.setBounds(214, 149, 89, 36);
 		contentPane.add(btnLimpar);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(58, 251, 352, 376);
+		scrollPane.setBounds(58, 218, 352, 376);
 		contentPane.add(scrollPane);
 		
 		tbMarca = new JTable(tableModel);
@@ -251,20 +252,49 @@ public class FrameMarca extends JFrame {
 			public void valueChanged(ListSelectionEvent e) {
 				int linha = tbMarca.getSelectedRow();
 				if(linha>=0) {
-					marca = marcas.get(linha);
-					tfId.setText(""+marca.getId());
-					tfNome.setText(marca.getNome());
+					try {
+						marca = marcas.get(linha);
+						tfId.setText(""+marca.getId());
+						tfNome.setText(marca.getNome());
+						
+						ImageIcon imgOriginal = new ImageIcon(marca.getLogo());
+						Image imgRedimensionada = imgOriginal.getImage().getScaledInstance(lbLogo.getWidth(), lbLogo.getHeight(), Image.SCALE_SMOOTH);
+						
+						ImageIcon imgLabel = new ImageIcon(imgRedimensionada);
+						lbLogo.setIcon(imgLabel);
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(null, "Nao foi possivel encontrar foto");
+						selecionado = null;
+						lbLogo.setIcon(null);
+					}
+					
 				}
+				
 				
 			}
 		});
 		
 		scrollPane.setViewportView(tbMarca);
+		
+		JButton btnVoltar = new JButton("Voltar");
+		btnVoltar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FrameInicial frame = new FrameInicial();
+				frame.setVisible(true);
+				FrameMarca.this.setVisible(false);
+				dispose();
+			}
+		});
+		btnVoltar.setMnemonic('l');
+		btnVoltar.setBounds(313, 149, 89, 36);
+		contentPane.add(btnVoltar);
 	}
 
 	private void limpar() {
 		tfId.setText("");
 		tfNome.setText("");
+		lbLogo.setIcon(null);
+		selecionado = null;
 		marca = null;
 		tfNome.requestFocus();
 	}

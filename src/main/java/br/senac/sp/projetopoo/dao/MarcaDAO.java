@@ -71,15 +71,16 @@ public class MarcaDAO implements InterfaceDao<Marca> {
 		
 	}
 	
-	public String[] vetorMarcas() throws SQLException{
+	public Marca[] vetorMarcas() throws SQLException{
 		listar();
-		String[] vetorNomeMarcas = new String[qntidadeMarcas];
+		Marca[] vetorNomeMarcas = new Marca[qntidadeMarcas];
 		sql = "select nome from marca ";
 		stmt = conexao.prepareStatement(sql);
 		ResultSet rs = stmt.executeQuery();
 		int contadorVetor = 0;
 		while(rs.next()) {
-			vetorNomeMarcas[contadorVetor] = rs.getString("nome");
+			vetorNomeMarcas[contadorVetor] = new Marca();
+			vetorNomeMarcas[contadorVetor].setNome(rs.getString("nome"));
 			contadorVetor++;
 			
 			

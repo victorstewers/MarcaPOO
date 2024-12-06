@@ -43,6 +43,11 @@ public class Marca {
 	public void setLogo(byte[] logo) {
 		this.logo = logo;
 	}
+
+	@Override
+	public String toString() {
+		return nome;
+	}
 	
 	
 }

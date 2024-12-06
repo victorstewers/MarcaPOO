@@ -49,6 +49,8 @@ public class FrameInicial extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				FrameMarca frame = new FrameMarca();
 				frame.setVisible(true);
+				FrameInicial.this.setVisible(false);
+				dispose();
 			}
 		});
 		btnFrameMarca.setBounds(58, 99, 135, 59);
@@ -61,6 +63,8 @@ public class FrameInicial extends JFrame {
 				try {
 					frame = new FrameCelular();
 					frame.setVisible(true);
+					FrameInicial.this.setVisible(false);
+					dispose();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

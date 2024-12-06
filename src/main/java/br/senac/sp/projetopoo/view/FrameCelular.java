@@ -6,8 +6,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import br.senac.sp.projetopoo.dao.CelularDaoHib;
 import br.senac.sp.projetopoo.dao.ConnectionFactory;
+import br.senac.sp.projetopoo.dao.EMFactory;
+import br.senac.sp.projetopoo.dao.InterfaceDao;
 import br.senac.sp.projetopoo.dao.MarcaDAO;
+import br.senac.sp.projetopoo.modelo.Celular;
+import br.senac.sp.projetopoo.modelo.Marca;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,6 +35,8 @@ public class FrameCelular extends JFrame {
 	private JPanel contentPane;
 	private JTextField tfId;
 	private JTextField tfModelo;
+	private Celular celular;
+	private InterfaceDao<Celular> dao;
 	private JTable table;
 	private JTextField txtBuscar;
 	private MarcaDAO marcaDao;
@@ -56,8 +63,12 @@ public class FrameCelular extends JFrame {
 	 * @throws SQLException 
 	 */
 	public FrameCelular() throws SQLException {
+		
+		dao = new CelularDaoHib(EMFactory.getEntityManager());
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 685, 587);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -84,7 +95,7 @@ public class FrameCelular extends JFrame {
 		
 		tfModelo = new JTextField();
 		tfModelo.setColumns(10);
-		tfModelo.setBounds(88, 62, 186, 20);
+		tfModelo.setBounds(88, 62, 328, 20);
 		contentPane.add(tfModelo);
 		
 		JLabel lblMarca = new JLabel("Marca:");
@@ -94,9 +105,10 @@ public class FrameCelular extends JFrame {
 		
 		JComboBox cbMarca = new JComboBox();
 		marcaDao = new MarcaDAO(conn.getConexao());
-		String vetor[] = marcaDao.vetorMarcas();
+		Marca vetor[] = marcaDao.vetorMarcas();
+		String vetorString[] = new String[]{"oi","victor"};
 		cbMarca.setModel(new DefaultComboBoxModel(vetor));
-		cbMarca.setBounds(88, 96, 186, 22);
+		cbMarca.setBounds(88, 96, 328, 22);
 		contentPane.add(cbMarca);
 		
 		JLabel lblSistemaOperacional = new JLabel("Sistema Operacional:");
@@ -112,6 +124,18 @@ public class FrameCelular extends JFrame {
 		JButton btnSalvar = new JButton("Salvar");
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (tfModelo.getText().trim().isEmpty()) {
+					JOptionPane.showMessageDialog(FrameCelular.this, "Informe o nome", "Aviso",
+							JOptionPane.INFORMATION_MESSAGE);
+					tfModelo.requestFocus();
+				}else {
+					if(celular == null) {
+						celular = new Celular();
+					}
+					celular.setModelo(tfModelo.getText().trim());
+					celular.setMarca((Marca)cbMarca.getSelectedItem());
+				}
+				
 			}
 		});
 		btnSalvar.setBounds(39, 304, 119, 36);
@@ -136,6 +160,10 @@ public class FrameCelular extends JFrame {
 		JButton btnVoltar = new JButton("Voltar");
 		btnVoltar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				FrameInicial frame = new FrameInicial();
+				frame.setVisible(true);
+				FrameCelular.this.setVisible(false);
+				dispose();
 			}
 		});
 		btnVoltar.setBounds(426, 304, 119, 36);
